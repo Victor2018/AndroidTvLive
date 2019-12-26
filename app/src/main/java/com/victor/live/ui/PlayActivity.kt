@@ -2,9 +2,11 @@ package com.victor.live
 
 import android.content.Intent
 import android.os.Bundle
+import android.os.Message
 import android.support.v4.app.ActivityCompat
 import android.support.v4.app.ActivityOptionsCompat
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.View
 import com.victor.clips.ui.BaseActivity
 import com.victor.hdtv.data.ChannelInfo
@@ -12,11 +14,35 @@ import com.victor.kplayer.library.module.Player
 import com.victor.live.util.Constant
 import com.victor.live.util.MainHandler
 import kotlinx.android.synthetic.main.activity_play.*
+import java.util.*
 
-class PlayActivity : BaseActivity() {
+class PlayActivity : BaseActivity(),MainHandler.OnMainHandlerImpl {
 
     var mPlayer: Player? = null
     var channelInfo: ChannelInfo? = null
+
+    override fun handleMainMessage(message: Message) {
+        when (message?.what) {
+            Player.PLAYER_PREPARING -> {
+            }
+            Player.PLAYER_PREPARED -> {
+            }
+            Player.PLAYER_ERROR -> {
+                Log.e(TAG,"handleMainMessage-PLAYER_ERROR")
+                var random = Random()
+                var index = random.nextInt(channelInfo?.play_urls!!.size)
+                mPlayer?.playUrl(channelInfo?.play_urls!![index].play_url,true)
+            }
+            Player.PLAYER_BUFFERING_START -> {
+            }
+            Player.PLAYER_BUFFERING_END -> {
+            }
+            Player.PLAYER_PROGRESS_INFO -> {
+            }
+            Player.PLAYER_COMPLETE -> {
+            }
+        }
+    }
 
     companion object {
         var SHARED_ELEMENT_NAME = "transe_album_img"
@@ -42,7 +68,8 @@ class PlayActivity : BaseActivity() {
     }
 
     fun initialize () {
-        mPlayer = Player(mSvPlay, MainHandler.get())
+        MainHandler.instance.register(this)
+        mPlayer = Player(mSvPlay, MainHandler.instance)
     }
 
     fun initData () {
@@ -61,6 +88,7 @@ class PlayActivity : BaseActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        MainHandler.instance.unregister(this)
         mPlayer?.stop()
         mPlayer = null
     }

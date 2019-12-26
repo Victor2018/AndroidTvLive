@@ -132,7 +132,9 @@ class Player: TextureView.SurfaceTextureListener,
 
     override fun onError(mp: MediaPlayer?, p1: Int, p2: Int): Boolean {
         Log.e(TAG, "onError()......")
-        replay()
+//        replay()
+        mNotifyHandler?.removeMessages(PLAYER_ERROR)
+        mNotifyHandler?.sendEmptyMessage(PLAYER_ERROR)
         return false
     }
 

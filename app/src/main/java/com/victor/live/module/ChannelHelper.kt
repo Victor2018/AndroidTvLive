@@ -110,10 +110,10 @@ class ChannelHelper (var context: Context?,var responseCls: KClass<Any>?) {
     }
 
     fun onReponse(result: String?) {
-        MainHandler.runMainThread {
+        MainHandler.instance.runMainThread(Runnable {
             var reponse = parseReponse(result) as ChannelReq
             mOnChannelListener?.OnChannel(reponse)
-        }
+        })
     }
 
     fun getJsonFromAssets(fileName: String): String? {
