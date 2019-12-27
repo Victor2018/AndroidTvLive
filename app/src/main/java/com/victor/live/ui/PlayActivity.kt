@@ -24,18 +24,22 @@ class PlayActivity : BaseActivity(),MainHandler.OnMainHandlerImpl {
     override fun handleMainMessage(message: Message) {
         when (message?.what) {
             Player.PLAYER_PREPARING -> {
+                mPbLoading.visibility = View.VISIBLE
             }
             Player.PLAYER_PREPARED -> {
+                mPbLoading.visibility = View.GONE
             }
             Player.PLAYER_ERROR -> {
-                Log.e(TAG,"handleMainMessage-PLAYER_ERROR")
+                mPbLoading.visibility = View.VISIBLE
                 var random = Random()
                 var index = random.nextInt(channelInfo?.play_urls!!.size)
                 mPlayer?.playUrl(channelInfo?.play_urls!![index].play_url,true)
             }
             Player.PLAYER_BUFFERING_START -> {
+                mPbLoading.visibility = View.VISIBLE
             }
             Player.PLAYER_BUFFERING_END -> {
+                mPbLoading.visibility = View.GONE
             }
             Player.PLAYER_PROGRESS_INFO -> {
             }

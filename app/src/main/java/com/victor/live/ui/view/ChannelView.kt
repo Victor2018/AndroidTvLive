@@ -1,19 +1,16 @@
-package com.victor.hdtv.data
-
-import java.io.Serializable
+package com.victor.live.ui.view
 
 /*
  * -----------------------------------------------------------------
  * Copyright (C) 2018-2028, by Victor, All rights reserved.
  * -----------------------------------------------------------------
- * File: ChannelReq
+ * File: ChannelView
  * Author: Victor
- * Date: 2019/12/24 16:30
+ * Date: 2019/12/27 16:50
  * Description: 
  * -----------------------------------------------------------------
  */
 
-class ChannelReq: Serializable {
-    var count: Int = 0
-    var categorys: List<CategoryInfo>? = null
+interface ChannelView {
+    fun OnChannel (data: Any?,msg: String)
 }

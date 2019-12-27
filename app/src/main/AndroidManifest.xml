@@ -15,6 +15,7 @@
 
     <application
         android:allowBackup="true"
+        android:name="com.victor.clips.app.App"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
@@ -39,6 +40,10 @@
             android:name=".PlayActivity"
             android:launchMode="singleTask"
             android:screenOrientation="landscape"/>
+
+        <activity
+            android:name="com.victor.crash.library.CrashActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
     </application>
 
 </manifest>

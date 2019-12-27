@@ -262,6 +262,7 @@ dependencies {
 
     //kotlin 网络请求库
     implementation 'com.github.Victor2018:KHttpLib:v2.3'
+    implementation 'com.github.Victor2018:CrashSpiderLib:v1.3'
     //fastjson库
     implementation 'com.alibaba:fastjson:1.1.56.android'
     //图片加载glide库

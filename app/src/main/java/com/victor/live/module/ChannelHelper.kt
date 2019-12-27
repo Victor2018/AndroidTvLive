@@ -49,7 +49,7 @@ class ChannelHelper (var context: Context?,var responseCls: KClass<Any>?) {
             override fun handleMessage(msg: Message) {
                 when (msg.what) {
                     Constant.Msg.REQUEST_CHANNEL -> {
-                        var result = getJsonFromAssets("live.json")
+                        var result = getJsonFromAssets("channel.json")
                         onReponse(result)
                     }
                 }

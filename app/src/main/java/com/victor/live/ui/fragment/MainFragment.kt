@@ -31,15 +31,20 @@ import com.victor.hdtv.interfaces.OnChannelListener
 import com.victor.live.PlayActivity
 import com.victor.live.R
 import com.victor.live.presenter.CardPresenter
+import com.victor.live.presenter.ChannelPresenterImpl
+import com.victor.live.ui.view.ChannelView
 import com.victor.live.util.Constant
+import com.victor.live.util.WebConfig
 import org.victor.khttp.library.module.ChannelHelper
 import kotlin.reflect.KClass
 
 /**
  * Loads a grid of cards with movies to browse.
  */
-class MainFragment : BrowseFragment(), OnChannelListener {
+class MainFragment : BrowseFragment(), OnChannelListener,ChannelView {
+
     var TAG = "MainFragment"
+    var channelPresenter: ChannelPresenterImpl? = null
     var channelHelper: ChannelHelper? = null;
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -55,13 +60,16 @@ class MainFragment : BrowseFragment(), OnChannelListener {
     }
 
     fun initialize () {
+        channelPresenter = ChannelPresenterImpl(this)
+
         channelHelper = ChannelHelper(activity,ChannelReq::class as KClass<Any>)
         channelHelper?.mOnChannelListener = this
+
 
     }
 
     fun iniData () {
-        channelHelper?.sendRequest(Constant.Msg.REQUEST_CHANNEL)
+        channelPresenter?.sendRequest(WebConfig.CHANNEL_URL,null,null)
     }
 
     private fun setupUIElements() {
@@ -95,6 +103,17 @@ class MainFragment : BrowseFragment(), OnChannelListener {
         }
 
         adapter = rowsAdapter
+    }
+
+    override fun OnChannel(data: Any?, msg: String) {
+        Log.e(TAG,"OnChannel()......")
+        if (data == null) {
+            Log.e(TAG,"OnChannel()......data == null")
+            channelHelper?.sendRequest(Constant.Msg.REQUEST_CHANNEL)
+            return
+        }
+        var channelReq = data as ChannelReq
+        loadRows(channelReq)
     }
 
     override fun OnChannel(data: ChannelReq) {
@@ -145,7 +164,11 @@ class MainFragment : BrowseFragment(), OnChannelListener {
     override fun onDestroy() {
         super.onDestroy()
 
+        channelPresenter?.detachView()
+        channelPresenter = null
+
         channelHelper?.onDestroy()
         channelHelper = null
+
     }
 }
