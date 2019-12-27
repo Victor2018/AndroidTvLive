@@ -482,8 +482,7 @@
 			},
 			{"channel_name":"厦门卫视HD","play_urls":
 			[
-				{"play_url":"http://223.110.241.139:6610/gitv/live1/G_XIAMEN/G_XIAMEN/"},
-				{"play_url":"http://cstvpull.live.wscdns.com/live/xiamen.flv"}
+				{"play_url":"http://223.110.241.139:6610/gitv/live1/G_XIAMEN/G_XIAMEN/"}
 			],
 				"epg":"http://www.tvsou.com/epg/xmws?class=weishi",
 				"icon":"https://github.com/Victor2018/SeagullTv/raw/master/SrceenShot/xmws.png"

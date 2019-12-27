@@ -16,6 +16,6 @@ import java.util.HashMap
  */
 class WebConfig {
     companion object {
-        const val CHANNEL_URL: String = "https://raw.githubusercontent.com/Victor2018/AndroidTvLive/master/docs/channels.json"
+        const val CHANNEL_URL: String = "https://raw.githubusercontent.com/Victor2018/AndroidTvLive/master/docs/channel.json"
     }
 }
