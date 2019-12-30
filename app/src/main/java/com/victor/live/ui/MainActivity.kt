@@ -21,9 +21,10 @@ import com.victor.clips.ui.BaseActivity
  */
 class MainActivity : BaseActivity() {
 
+
+
     override fun getLayoutResource(): Int {
         return R.layout.activity_main
     }
-
 
 }

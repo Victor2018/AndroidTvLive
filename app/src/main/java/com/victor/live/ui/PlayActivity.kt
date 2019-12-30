@@ -1,5 +1,6 @@
 package com.victor.live
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.os.Message
@@ -25,21 +26,28 @@ class PlayActivity : BaseActivity(),MainHandler.OnMainHandlerImpl {
         when (message?.what) {
             Player.PLAYER_PREPARING -> {
                 mPbLoading.visibility = View.VISIBLE
+                mTvSource.visibility = View.VISIBLE
             }
             Player.PLAYER_PREPARED -> {
                 mPbLoading.visibility = View.GONE
+                mTvSource.visibility = View.GONE
             }
             Player.PLAYER_ERROR -> {
                 mPbLoading.visibility = View.VISIBLE
+                mTvSource.visibility = View.VISIBLE
                 var random = Random()
                 var index = random.nextInt(channelInfo?.play_urls!!.size)
-                mPlayer?.playUrl(channelInfo?.play_urls!![index].play_url,true)
+                var playUrl = channelInfo?.play_urls!![index].play_url
+                mTvSource.setText("播放源：" + playUrl)
+                mPlayer?.playUrl(playUrl,true)
             }
             Player.PLAYER_BUFFERING_START -> {
                 mPbLoading.visibility = View.VISIBLE
+                mTvSource.visibility = View.VISIBLE
             }
             Player.PLAYER_BUFFERING_END -> {
                 mPbLoading.visibility = View.GONE
+                mTvSource.visibility = View.GONE
             }
             Player.PLAYER_PROGRESS_INFO -> {
             }
@@ -49,15 +57,13 @@ class PlayActivity : BaseActivity(),MainHandler.OnMainHandlerImpl {
     }
 
     companion object {
-        var SHARED_ELEMENT_NAME = "transe_album_img"
 
-        fun  intentStart (activity: AppCompatActivity, data: ChannelInfo, sharedElement: View, sharedElementName: String) {
-            var intent = Intent(activity, PlayActivity::class.java)
+        fun  intentStart (context: Context, data: ChannelInfo) {
+            var intent = Intent(context, PlayActivity::class.java)
             var bundle = Bundle()
             bundle.putSerializable(Constant.INTENT_DATA_KEY,data)
             intent.putExtras(bundle)
-            val options = ActivityOptionsCompat.makeSceneTransitionAnimation(activity,sharedElement, sharedElementName)
-            ActivityCompat.startActivity(activity!!, intent, options.toBundle())
+            context.startActivity(intent)
         }
     }
 
@@ -68,7 +74,7 @@ class PlayActivity : BaseActivity(),MainHandler.OnMainHandlerImpl {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initialize()
-        initData()
+        initData(intent)
     }
 
     fun initialize () {
@@ -76,9 +82,11 @@ class PlayActivity : BaseActivity(),MainHandler.OnMainHandlerImpl {
         mPlayer = Player(mSvPlay, MainHandler.instance)
     }
 
-    fun initData () {
-        channelInfo = intent.getSerializableExtra(Constant.INTENT_DATA_KEY) as ChannelInfo?
-        mPlayer?.playUrl(channelInfo?.play_urls!![0].play_url,true)
+    fun initData (intent: Intent?) {
+        channelInfo = intent?.getSerializableExtra(Constant.INTENT_DATA_KEY) as ChannelInfo?
+        var playUrl = channelInfo?.play_urls!![0].play_url
+        mTvSource.setText("播放源：" + playUrl)
+        mPlayer?.playUrl(playUrl,true)
     }
     override fun onResume() {
         super.onResume()
@@ -95,5 +103,10 @@ class PlayActivity : BaseActivity(),MainHandler.OnMainHandlerImpl {
         MainHandler.instance.unregister(this)
         mPlayer?.stop()
         mPlayer = null
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        initData(intent)
     }
 }

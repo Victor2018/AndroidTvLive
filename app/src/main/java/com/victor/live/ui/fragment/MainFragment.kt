@@ -28,6 +28,7 @@ import android.widget.Toast
 import com.victor.hdtv.data.ChannelInfo
 import com.victor.hdtv.data.ChannelReq
 import com.victor.hdtv.interfaces.OnChannelListener
+import com.victor.live.MainActivity
 import com.victor.live.PlayActivity
 import com.victor.live.R
 import com.victor.live.presenter.CardPresenter
@@ -139,16 +140,7 @@ class MainFragment : BrowseFragment(), OnChannelListener,ChannelView {
         ) {
 
             if (item is ChannelInfo) {
-                val intent = Intent(activity, PlayActivity::class.java)
-                intent.putExtra(Constant.INTENT_DATA_KEY, item)
-
-                val bundle = ActivityOptionsCompat.makeSceneTransitionAnimation(
-                    activity,
-                    (itemViewHolder.view as ImageCardView).mainImageView,
-                    PlayActivity.SHARED_ELEMENT_NAME
-                ).toBundle()
-                activity.startActivity(intent, bundle)
-
+                PlayActivity.intentStart(activity,item)
             }
         }
     }
