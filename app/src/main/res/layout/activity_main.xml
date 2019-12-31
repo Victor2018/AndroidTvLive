@@ -1,10 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main_browse_fragment"
-    android:name="com.victor.live.ui.fragment.MainFragment"
+    android:id="@+id/mFlMain"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     tools:deviceIds="tv"
-    tools:ignore="MergeRootFrame" />
+    tools:ignore="MergeRootFrame" >
+    <fragment
+        android:id="@+id/main_browse_fragment"
+        android:name="com.victor.live.ui.fragment.MainFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".MainActivity"
+        tools:deviceIds="tv"
+        tools:ignore="MergeRootFrame" />
+
+    <TextView
+        android:id="@+id/mTvSource"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="20dp"
+        android:textColor="@color/search_opaque"
+        android:textSize="36sp"
+        android:visibility="gone"/>
+    <ProgressBar
+        android:id="@+id/mPbLoading"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+</FrameLayout>

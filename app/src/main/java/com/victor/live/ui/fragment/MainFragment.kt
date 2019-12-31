@@ -16,11 +16,9 @@ package com.victor.live.ui.fragment
 
 import java.util.Collections
 
-import android.content.Intent
 import android.os.Bundle
 import android.support.v17.leanback.app.BrowseFragment
 import android.support.v17.leanback.widget.*
-import android.support.v4.app.ActivityOptionsCompat
 import android.support.v4.content.ContextCompat
 import android.util.Log
 import android.widget.Toast
@@ -29,10 +27,9 @@ import com.victor.hdtv.data.ChannelInfo
 import com.victor.hdtv.data.ChannelReq
 import com.victor.hdtv.interfaces.OnChannelListener
 import com.victor.live.MainActivity
-import com.victor.live.PlayActivity
 import com.victor.live.R
-import com.victor.live.presenter.CardPresenter
 import com.victor.live.presenter.ChannelPresenterImpl
+import com.victor.live.presenter.VideoCardPresener
 import com.victor.live.ui.view.ChannelView
 import com.victor.live.util.Constant
 import com.victor.live.util.WebConfig
@@ -89,7 +86,7 @@ class MainFragment : BrowseFragment(), OnChannelListener,ChannelView {
 
     private fun loadRows(data: ChannelReq) {
         val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
-        val rowCellPresenter = CardPresenter()
+        val rowCellPresenter = VideoCardPresener();
 
         for (i in 0 until data.categorys!!.size) {
             if (i != 0) {
@@ -140,7 +137,8 @@ class MainFragment : BrowseFragment(), OnChannelListener,ChannelView {
         ) {
 
             if (item is ChannelInfo) {
-                PlayActivity.intentStart(activity,item)
+                (activity as MainActivity).play(item)
+//                PlayActivity.intentStart(activity,item)
             }
         }
     }
