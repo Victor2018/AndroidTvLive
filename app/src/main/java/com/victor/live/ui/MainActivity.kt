@@ -16,11 +16,15 @@ package com.victor.live
 
 import android.os.Bundle
 import android.os.Message
+import android.util.Log
 import android.view.KeyEvent
 import android.view.SurfaceView
 import android.view.View
+import android.view.ViewGroup
+import com.victor.clips.app.App
 import com.victor.clips.ui.BaseActivity
 import com.victor.hdtv.data.ChannelInfo
+import com.victor.hdtv.data.ChannelReq
 import com.victor.kplayer.library.module.Player
 import com.victor.live.util.MainHandler
 import kotlinx.android.synthetic.main.activity_main.*
@@ -36,6 +40,9 @@ class MainActivity : BaseActivity(), MainHandler.OnMainHandlerImpl {
     var channelInfo: ChannelInfo? = null
     var mSvPlay: SurfaceView? = null
     var isFullScreen: Boolean = false
+    var mChannelReq: ChannelReq? = null
+    var mCategoryPosition: Int = 0
+    var mChannelPosition: Int = 0
 
     override fun handleMainMessage(message: Message) {
         if (!isFullScreen) return
@@ -88,9 +95,22 @@ class MainActivity : BaseActivity(), MainHandler.OnMainHandlerImpl {
         mPlayer = Player(mSvPlay!!, MainHandler.instance)
     }
 
-    fun play(data: ChannelInfo?) {
-        mFlMain.addView(mSvPlay,1)
+    fun play(channelReq: ChannelReq?,categoryPosition: Int,channelPosition: Int,data: ChannelInfo?) {
+        mChannelReq = channelReq
+        mCategoryPosition = categoryPosition
+        mChannelPosition = channelPosition
         channelInfo = data
+
+        mFlMain.addView(mSvPlay,1)
+        var playUrl = channelInfo?.play_urls!![0].play_url
+        mTvSource.setText("播放源：" + playUrl)
+        mPlayer?.playUrl(playUrl,true)
+        isFullScreen = true
+    }
+
+    fun playNext () {
+        channelInfo = mChannelReq?.categorys!![mCategoryPosition]?.channels!![mChannelPosition]
+
         var playUrl = channelInfo?.play_urls!![0].play_url
         mTvSource.setText("播放源：" + playUrl)
         mPlayer?.playUrl(playUrl,true)
@@ -107,6 +127,39 @@ class MainActivity : BaseActivity(), MainHandler.OnMainHandlerImpl {
                     isFullScreen = false
                     return true
                 }
+            }
+            KeyEvent.KEYCODE_DPAD_UP -> {
+                if (mChannelReq == null) return true
+                Log.e(TAG,"onKeyDown()------>KEYCODE_DPAD_UP")
+                mChannelPosition = mChannelPosition + 1;
+                if (mChannelPosition >= mChannelReq?.categorys?.get(mCategoryPosition)!!.channels?.size!!) {
+                    mChannelPosition = 0
+                    mCategoryPosition = mCategoryPosition + 1
+                    if (mCategoryPosition >= mChannelReq?.categorys?.size!!) {
+                        mCategoryPosition = 0
+                        mChannelPosition = 0
+                    }
+                }
+                Log.e(TAG,"onKeyDown()------>mCategoryPosition = " + mCategoryPosition)
+                Log.e(TAG,"onKeyDown()------>mChannelPosition = " + mChannelPosition)
+                playNext()
+            }
+            KeyEvent.KEYCODE_DPAD_DOWN -> {
+                if (mChannelReq == null) return true
+                Log.e(TAG,"onKeyDown()------>KEYCODE_DPAD_DOWN")
+                mChannelPosition = mChannelPosition - 1;
+                if (mChannelPosition < 0) {
+                    mCategoryPosition = mCategoryPosition - 1
+                    mChannelPosition = mChannelReq?.categorys?.get(mCategoryPosition)!!.channels?.size!! - 1
+
+                    if (mCategoryPosition < 0) {
+                        mCategoryPosition = mChannelReq?.categorys?.size!! - 1
+                        mChannelPosition = mChannelReq?.categorys?.get(mCategoryPosition)!!.channels?.size!! - 1
+                    }
+                }
+                Log.e(TAG,"onKeyDown()------>mCategoryPosition = " + mCategoryPosition)
+                Log.e(TAG,"onKeyDown()------>mChannelPosition = " + mChannelPosition)
+                playNext()
             }
         }
         return super.onKeyDown(keyCode, event)

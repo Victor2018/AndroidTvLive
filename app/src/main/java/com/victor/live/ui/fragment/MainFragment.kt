@@ -28,6 +28,7 @@ import com.victor.hdtv.data.ChannelReq
 import com.victor.hdtv.interfaces.OnChannelListener
 import com.victor.live.MainActivity
 import com.victor.live.R
+import com.victor.live.presenter.CardPresenter
 import com.victor.live.presenter.ChannelPresenterImpl
 import com.victor.live.presenter.VideoCardPresener
 import com.victor.live.ui.view.ChannelView
@@ -44,6 +45,7 @@ class MainFragment : BrowseFragment(), OnChannelListener,ChannelView {
     var TAG = "MainFragment"
     var channelPresenter: ChannelPresenterImpl? = null
     var channelHelper: ChannelHelper? = null;
+    var mChannelReq: ChannelReq ? = null;
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         Log.i(TAG, "onCreate")
@@ -62,7 +64,6 @@ class MainFragment : BrowseFragment(), OnChannelListener,ChannelView {
 
         channelHelper = ChannelHelper(activity,ChannelReq::class as KClass<Any>)
         channelHelper?.mOnChannelListener = this
-
 
     }
 
@@ -85,8 +86,10 @@ class MainFragment : BrowseFragment(), OnChannelListener,ChannelView {
     }
 
     private fun loadRows(data: ChannelReq) {
+        mChannelReq = data
         val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
-        val rowCellPresenter = VideoCardPresener();
+        val rowCellPresenter = CardPresenter();
+//        val rowCellPresenter = VideoCardPresener();
 
         for (i in 0 until data.categorys!!.size) {
             if (i != 0) {
@@ -94,6 +97,7 @@ class MainFragment : BrowseFragment(), OnChannelListener,ChannelView {
             }
             val listRowAdapter = ArrayObjectAdapter(rowCellPresenter)
             for (j in 0 until data.categorys!![i].channels!!.size) {
+                data.categorys!![i].channels!![j].position = j
                 listRowAdapter.add(data.categorys!![i].channels!![j])
             }
             val header = HeaderItem(i.toLong(), data.categorys!![i].channel_category)
@@ -135,9 +139,12 @@ class MainFragment : BrowseFragment(), OnChannelListener,ChannelView {
             rowViewHolder: RowPresenter.ViewHolder,
             row: Row
         ) {
-
             if (item is ChannelInfo) {
-                (activity as MainActivity).play(item)
+                Log.e(TAG,"onItemClicked-row.headerItem.id = " + row.headerItem.id)
+                Log.e(TAG,"onItemClicked-row.headerItem.name = " + row.headerItem.name)
+                Log.e(TAG,"onItemClicked-item.position = " + item.position)
+
+                (activity as MainActivity).play(mChannelReq,row.headerItem.id.toInt(),item.position,item)
 //                PlayActivity.intentStart(activity,item)
             }
         }

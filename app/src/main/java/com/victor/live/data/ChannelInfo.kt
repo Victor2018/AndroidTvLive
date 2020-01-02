@@ -14,6 +14,7 @@ import java.io.Serializable
  */
 
 class ChannelInfo: Serializable {
+    var position: Int = 0
     var channel_name: String? = null
     var epg: String? = null
     var icon: String? = null
