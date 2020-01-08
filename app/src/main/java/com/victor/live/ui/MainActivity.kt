@@ -148,14 +148,12 @@ class MainActivity : BaseActivity(), MainHandler.OnMainHandlerImpl {
                 if (mChannelReq == null) return true
                 Log.e(TAG,"onKeyDown()------>KEYCODE_DPAD_DOWN")
                 mChannelPosition = mChannelPosition - 1;
-                if (mChannelPosition < 0) {
+                if (mChannelPosition <= 0) {
                     mCategoryPosition = mCategoryPosition - 1
-                    mChannelPosition = mChannelReq?.categorys?.get(mCategoryPosition)!!.channels?.size!! - 1
-
-                    if (mCategoryPosition < 0) {
+                    if (mCategoryPosition <= 0) {
                         mCategoryPosition = mChannelReq?.categorys?.size!! - 1
-                        mChannelPosition = mChannelReq?.categorys?.get(mCategoryPosition)!!.channels?.size!! - 1
                     }
+                    mChannelPosition = mChannelReq?.categorys?.get(mCategoryPosition)!!.channels?.size!! - 1
                 }
                 Log.e(TAG,"onKeyDown()------>mCategoryPosition = " + mCategoryPosition)
                 Log.e(TAG,"onKeyDown()------>mChannelPosition = " + mChannelPosition)
